@@ -10,10 +10,6 @@ export default function Home() {
 
   useEffect(() => {
     const url = 'https://api.artsearch.io/artworks/random';
-    const key = process.env.NEXT_PUBLIC_API_KEY;
-    if (!key) {
-      throw new Error("Missing NEXT_PUBLIC_API_KEY");
-    }
 
     fetch(url, {
       method: 'GET',
