@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AppWrapper } from "@/context/context";
+import BackButton from "./components/backButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +29,15 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>
+        <header className="bg-green-300 text-green-900 text-3xl font-bold p-5 grid grid-cols-3 shadow-lg">
+          <BackButton />
+          <h1 className="text-center">🌱Plants and Trees🌳</h1>
+        </header>
+        <AppWrapper>
+          {children}
+        </AppWrapper>
+      </body>
     </html>
   );
 }
