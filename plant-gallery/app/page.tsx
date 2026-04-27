@@ -10,14 +10,14 @@ export default function Home() {
   const [plants, setPlants] = useState<Plant[]>([]);
 
   useEffect(() => {
-      async function fetchData() {
-        const key = process.env.NEXT_PUBLIC_API_KEY;
-        const response = await fetch("https://perenual.com/api/v2/species-list?key=" + key);
-        const data: { data: Plant[] } = await response.json();
-        setPlants(data.data);
-      }
-      fetchData();
-    }, [])
+    async function fetchData() {
+      const key = process.env.NEXT_PUBLIC_API_KEY;
+      const response = await fetch("https://perenual.com/api/v2/species-list?key=" + key);
+      const data: { data: Plant[] } = await response.json();
+      setPlants(data.data);
+    }
+    fetchData();
+  }, [])
 
   return (
     <div className="bg-green-200" >
@@ -28,7 +28,6 @@ export default function Home() {
           className="text-white p-10 m-10 bg-green-400 rounded-lg hover:bg-green-200 hover:text-white text-2xl font-bold"
         >View Our Plant Directory</Link>
       </div>
-      
     </div>
   );
 }

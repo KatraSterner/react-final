@@ -24,6 +24,7 @@ export default function Home() {
             }
         }
         fetchData();
+        // mock data for when API acts up and testing visuals
         const mockPlant: PlantDetails = {
             id: 1,
             common_name: "European Silver Fir",
