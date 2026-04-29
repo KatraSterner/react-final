@@ -11,6 +11,7 @@ export default function Home() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   var page = 1;
 
@@ -26,24 +27,31 @@ export default function Home() {
     if (filter === "all") {
       url = baseUrl;
     } else {
-      url = baseUrl + "&" + filter + "=1"
+      url = baseUrl + "&" + filter + "=1";
     }
+    url = url + "&q=" + search;
     fetchData();
   }
 
   async function fetchData() {
-      setLoading(true);
-      // key getting WAS here test if this still works ---------------------------------------------------
-      const response = await fetch(url);
-      const data: { data: Plant[] } = await response.json();
-      setPlants(data.data);
-      setLoading(false);
+    setLoading(true);
+    const response = await fetch(url);
+    const data: { data: Plant[] } = await response.json();
+    setPlants(data.data);
+    setLoading(false);
+    // console.log(url)
+  }
 
-    }
+  async function clearForm() {
+    setSearch("");
+    setFilter("all");
+    url = baseUrl;
+    fetchData;
+  }
 
   useEffect(() => {
     
-    //fetchData();
+    fetchData();
 
     const mockData =  [
         {
@@ -104,9 +112,9 @@ export default function Home() {
         }
     ]
 
-    setLoading(true);
-    setPlants(mockData);
-    setLoading(false);
+    //setLoading(true);
+    //setPlants(mockData);
+    //setLoading(false);
   }, [])
 
   if (loading) {
@@ -121,16 +129,20 @@ export default function Home() {
 
   return (
     <div className="bg-green-100 text-black min-h-screen" >
-      <div className="flex justify-center items-center">
-        <p>TODO:</p>
-        <form className="flex items-center gap-3 mt-2" onSubmit={handleFilter}>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="text-green-800 bg-white p-2 pr-5 rounded-md text-xl focus:outline-none focus:ring-2 focus:ring-green-400">
+      <div className="flex justify-center items-center gap-5">
+        <form className="flex items-center mt-2 gap-3" onSubmit={handleFilter}>
+          <button onClick={clearForm} className="text-white bg-green-400 p-2 rounded-md text-xl font-bold hover:bg-green-500 hover:shadow-md h-10 px-4">Clear</button>
+
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="text-green-800 bg-white pr-5 pl-2 rounded-md text-xl h-10">
             <option value="all">All</option>
-            <option value="Edible">Edible</option>
+            <option value="edible">Edible</option>
             <option value="poisonous">Poisonous</option>
             <option value="indoor">Indoor</option>
           </select>
-          <button type="submit" className="text-white bg-green-400 p-2 rounded-md text-xl font-bold hover:bg-green-500 hover:shadow-md">Filter Plants</button>
+
+          <input type="text" className="text-green-800 bg-white p-2 pr-5 rounded-md text-xl h-10" value={search} onChange={(e) => setSearch(e.target.value)}/>
+
+          <button type="submit" className="text-white bg-green-400 p-2 rounded-md text-xl font-bold hover:bg-green-500 hover:shadow-md h-10 px-4">Filter</button>
         </form>
       </div>
 
