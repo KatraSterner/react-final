@@ -1,51 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import PlantCard from "../components/plantCard";
-import { Plant } from "../types";
-import { useAppContext } from "@/context/context"; 
-import { FormEvent } from "react";
+import { useParams } from "next/navigation";
+import UserPlantCard from "@/app/components/userPlantCard";
+import { useAppContext } from "@/context/context";
+import Link from "next/link";
+import { Plant } from "@/app/types";
+
 
 export default function Home() {
 
-  const [plants, setPlants] = useState<Plant[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
+    const [plants, setPlants] = useState<Plant[]>([]);
+    const params = useParams();
+    const userName = typeof params?.username === "string" ? params.username : undefined;
+    const { user, setUser } = useAppContext();
 
-  var page = 1;
-
-  const key = process.env.NEXT_PUBLIC_API_KEY;        
-  const baseUrl = "https://perenual.com/api/v2/species-list?key=" + key + "&page=" + page;
-
-  var url = baseUrl //+ "&page=" + page;
-
-  async function handleFilter(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    page = 1
-
-    if (filter === "all") {
-      url = baseUrl;
-    } else {
-      url = baseUrl + "&" + filter + "=1"
-    }
-    fetchData();
-  }
-
-  async function fetchData() {
-      setLoading(true);
-      // key getting WAS here test if this still works ---------------------------------------------------
-      const response = await fetch(url);
-      const data: { data: Plant[] } = await response.json();
-      setPlants(data.data);
-      setLoading(false);
-
-    }
-
-  useEffect(() => {
-    
-    //fetchData();
-
-    const mockData =  [
+    useEffect(() => {
+        const mockData =  [
         {
             "id": 1,
             "common_name": "European Silver Fir",
@@ -102,46 +73,42 @@ export default function Home() {
                 "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/European_Silver-fir_Vallombrosa_%28FI%29%2C_Italy.jpg/960px-European_Silver-fir_Vallombrosa_%28FI%29%2C_Italy.jpg"
             }
         }
-    ]
+        ]
+        setPlants(mockData);
+    }, [userName])
 
-    setLoading(true);
-    setPlants(mockData);
-    setLoading(false);
-  }, [])
+    if (!user) {
+        return (
+            <main className="bg-green-100 min-h-screen">
+                <div className="p-6 text-xl text-black text-center">
+                    <p>You must be logged in to view your garden.</p>
+                    <Link href="/" className="text-green-600 font-bold underline">Return to Login</Link>
+                </div>
+            </main>
+        );
+    }
 
-  if (loading) {
+    if (!user.garden || user.garden.length === 0) {
+        return (
+            <main className="bg-green-100 min-h-screen">
+                <div className="p-6 text-xl text-black text-center">
+                    <p>No Plants Have Been Saved to Your Garden</p>
+                    <Link href="/directory" className="text-green-600 font-bold underline">Return to Directory</Link>
+                </div>
+
+            </main>
+        );
+    }
+
     return (
-      <div className="min-h-screen flex items-center justify-center bg-green-100">
-        <p className="text-2xl font-bold text-green-800 animate-pulse">
-          🌱 Loading plants...
-        </p>
-      </div>
+        <div className="bg-green-100 text-black min-h-screen" >
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-green-100">
+                {user.garden.length > 0 && 
+                    user.garden.map((plant, index) => {
+                        return <UserPlantCard plant={plant} key={plant.gardenId}/>
+                    })
+                }
+            </div>
+        </div>
     );
-  }
-
-  return (
-    <div className="bg-green-100 text-black min-h-screen" >
-      <div className="flex justify-center items-center">
-        <p>TODO:</p>
-        <form className="flex items-center gap-3 mt-2" onSubmit={handleFilter}>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="text-green-800 bg-white p-2 pr-5 rounded-md text-xl focus:outline-none focus:ring-2 focus:ring-green-400">
-            <option value="all">All</option>
-            <option value="Edible">Edible</option>
-            <option value="poisonous">Poisonous</option>
-            <option value="indoor">Indoor</option>
-          </select>
-          <button type="submit" className="text-white bg-green-400 p-2 rounded-md text-xl font-bold hover:bg-green-500 hover:shadow-md">Filter Plants</button>
-        </form>
-      </div>
-
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {plants?.length > 0 && 
-        plants.map((plant, index) => {
-          return <PlantCard plant={plant} key={plant.id}/>
-        })
-      }
-      </div>
-      
-    </div>
-  );
 }

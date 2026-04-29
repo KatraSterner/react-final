@@ -3,35 +3,43 @@
 import { Plant } from "@/app/types";
 import { createContext, useContext, useState } from "react";
 
-type Context = {
-    userName: string;
-    setUserName: (userName: string) => void;
-    userGarden: [];
-    setUserGarden: (garden: Plant[]) => void;
+// data about user
+interface User {
+  username: string;
+  garden: GardenPlant[];
 }
 
-const AppContext = createContext<any>(null);
+// plants that are stored in a user's garden
+export type GardenPlant = Plant & {
+  gardenId: string;
+};
+
+type Context = {
+    user: User | null;
+    setUser: (user: User | null) => void
+}
+
+const AppContext = createContext<Context | null>(null);
 
 export function AppWrapper({children} : {
     children: React.ReactNode;
 }) {
-    const [userName, setUserName] = useState('');
-    const [userGarden, setUserGarden] = useState<Plant[]>([]);
+    const [user, setUser] = useState<User | null>(null);
 
     return (
-        <AppContext.Provider
-            value={{
-                userName,
-                setUserName,
-                setUserGarden,
-                userGarden
-            }}
-        >
+        <AppContext.Provider value={{
+                user,
+                setUser,
+        }}>
             {children}
         </AppContext.Provider>
     )
 }
 
 export function useAppContext() {
-    return useContext(AppContext);
+    const context = useContext(AppContext);
+    if (!context) {
+        throw new Error("useAppContext must be used inside AppWrapper :(")
+    }
+    return context;
 }

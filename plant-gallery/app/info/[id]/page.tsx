@@ -23,7 +23,7 @@ export default function Home() {
                 console.log("ERROR! D: Oh No!:", error);
             }
         }
-        fetchData();
+        // fetchData();
         // mock data for when API acts up and testing visuals
         const mockPlant: PlantDetails = {
             id: 1,
@@ -119,7 +119,7 @@ export default function Home() {
                 license_name: "Attribution-ShareAlike License",
                 license_url: "https://creativecommons.org/licenses/by-sa/2.0/",
                 original_url: "",
-                regular_url: "",
+                regular_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/European_Silver-fir_Vallombrosa_%28FI%29%2C_Italy.jpg/960px-European_Silver-fir_Vallombrosa_%28FI%29%2C_Italy.jpg",
                 medium_url: "",
                 small_url: "",
                 thumbnail: "",
@@ -157,19 +157,21 @@ export default function Home() {
                 unit: "hours",
             },
         };
-        // setPlant(mockPlant);
+        setPlant(mockPlant);
     }, [plantId])
 
     if (!plant) {
         return (
-        <main className="bg-green-200">
-            <div className="p-6 text-black">Loading...</div>
-        </main>
+            <div className="min-h-screen flex items-center justify-center bg-green-100">
+                <p className="text-2xl font-bold text-green-800 animate-pulse">
+                    🌱 Loading plants...
+                </p>
+            </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-green-50 p-6 flex justify-center">
+        <div className="min-h-screen bg-green-100 p-6 flex justify-center">
             <div className="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
 
                 {/* 🌿 Header */}
@@ -195,7 +197,7 @@ export default function Home() {
                     </div>
                 )}
 
-                <div className="p-6 space-y-6 text-gray-800">
+                <div className="p-6 space-y-6 text-green-900">
 
                     {/* 📌 Basic Info */}
                     <section>
