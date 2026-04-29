@@ -140,7 +140,7 @@ export default function Home() {
             <option value="indoor">Indoor</option>
           </select>
 
-          <input type="text" className="text-green-800 bg-white p-2 pr-5 rounded-md text-xl h-10" value={search} onChange={(e) => setSearch(e.target.value)}/>
+          <input type="text" className="text-green-800 bg-white p-2 pr-5 rounded-md text-xl h-10" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="search plants..."/>
 
           <button type="submit" className="text-white bg-green-400 p-2 rounded-md text-xl font-bold hover:bg-green-500 hover:shadow-md h-10 px-4">Filter</button>
         </form>
