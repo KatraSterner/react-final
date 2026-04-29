@@ -23,7 +23,7 @@ export default function Home() {
                 console.log("ERROR! D: Oh No!:", error);
             }
         }
-        // fetchData();
+        fetchData();
         // mock data for when API acts up and testing visuals
         const mockPlant: PlantDetails = {
             id: 1,
@@ -157,7 +157,7 @@ export default function Home() {
                 unit: "hours",
             },
         };
-        setPlant(mockPlant);
+        //setPlant(mockPlant);
     }, [plantId])
 
     if (!plant) {
